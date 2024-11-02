@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>課題研究　Webページ</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Basic styling for layout */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #f4f4f4;
+            padding: 10px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+        .game-container, .code-container {
+            flex: 1;
+            min-width: 300px;
+            max-width: 920px; /*コード一覧　枠　横幅*/
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .new-container {
+            flex: 1;
+            min-width: 300px;
+            max-width: 700px; /*コード説明　枠　横幅*/
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        iframe {
+            width: 900px;
+            height: 700px; /* Increased height */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            overflow: hidden; /* Hide scrollbars */
+        }
+        pre {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            line-height: 1.6;
+            text-align: left; /* Align text to the left */
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            color: #2a2a2a;
+        }
+        footer {
+            background: #f4f4f4;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        .image-wrapper {
+            max-height: 725px; /* Set a max height for the wrapper */
+            max-width: 920px; /* Enable vertical scrolling */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border: 1px solid #ddd; /*外枠の表示 */
+            border-radius: 5px; /* Optional: rounded corners */
+            margin-bottom: 10px; /* Space below the image */
+        }
+        .snapshot-image {
+            width: 900px; /* Ensure the image fits the width */
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>課題研究　テトリス作ってみた</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">ホーム</a></li>
+                <li><a href="#about">説明</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="home">
+            <h2>テトリスを楽しもう</h2>
+            <div class="container">
+                <div class="game-container">
+                    <h3>テトリスゲーム</h3>
+                    <iframe src="tetris.html" title="テトリスゲーム" scrolling="no"></iframe>
+                </div>
+                <div class="code-container">
+                    <h3>操作方法</h3>
+                    <pre><code>
+▶️      : スタートボタン
+🔄  R  : リセットボタン
+↻   W  : 回転
+←   A  : 左移動
+→   D  : 右移動
+↓   S  : 落下
+                    </code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="コード一覧">
+            <div class="container">
+                <div class="game-container">
+                    <h3>コード一覧</h3>
+                    <div class="image-wrapper">
+                        <img src="code-snapshot.png" alt="コードのスナップショット" class="snapshot-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="コード説明">
+            <div class="container">
+                <div class="game-container">
+                    <h3>テトロミノのコード説明</h3>
+                    <div class="image-wrapper">
+                        <img src="テトロミノ.png" alt="テトロミノのコードのスナップショット" class="snapshot-image">
+                    </div>
+                </div>
+                <div class="new-container">
+                    <h3>テトロミノ</h3>
+                    <p>ここに新しい内容を追加できます。</p>
+                    <pre><code>
+                        追加情報や説明をここに記述できます。
+                    </code></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <script src="js/script.js"></script>
+</body>
+</html>
