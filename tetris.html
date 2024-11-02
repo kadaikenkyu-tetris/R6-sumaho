@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+  #can {
+    border: 4px solid #555;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .controls {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .controls button {
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+  }
+
+  #score-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+  }
+
+  #start {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px; /* ボタン内のアイコンを垂直に中央揃え */
+    text-align: center;
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    display: block; /* 常に表示する */
+    margin-right: 10px; /* スタートボタンとリセットボタンの間にスペースを追加 */
+}
+
+  #reset {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px; /* ボタン内のアイコンを垂直に中央揃え */
+    text-align: center;
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    display: block; /* 常に表示する */
+    margin-right: 10px; /* リセットボタンとスコアの間にスペースを追加 */
+  }
+  #score {
+    font-size: 24px;
+  }
+
+</style>
+</head>
+<body>
+<div id="score-container">
+  <button id="start">▶️</button>
+  <button id="reset">🔄</button>
+  <div id="score">Score: 0</div>
+</div>
+<canvas id="can"></canvas>
+<div class="controls">
+    <button id="moveLeft">←</button>
+    <button id="moveRight">→</button>
+    <button id="rotate">↻</button>
+    <button id="accelerate">↓</button>
+</div>
+
+<script>
+
+//タイトル
+document.title = "課題研究　テトリス";
+
+//落ちるスピード
+const GAME_SPEED = 300;
+
+//フィールドサイズ
+const FIELD_COL = 10;
+const FIELD_ROW = 20;
+
+//ブロック一つのサイズ（ピクセル）
+const BLOCK_SIZE = 25;
+
+//スクリーンのサイズ
+const SCREEN_W = BLOCK_SIZE * FIELD_COL;
+const SCREEN_H = BLOCK_SIZE * FIELD_ROW;
+
+//テトロミノのサイズ
+const TETRO_SIZE = 4;
+
+let can = document.getElementById("can");
+let con = can.getContext("2d");
+
+can.width = SCREEN_W;
+can.height = SCREEN_H;
+can.style.border = "4px solid #555";
+
+const TETRO_COLORS = [
+    "#000",         // 0空
+    "#6CF",         // 1水色
+    "#F92",         // 2オレンジ
+    "#66F",         // 3青
+    "#C5C",         // 4紫
+    "#FD2",         // 5黄色
+    "#F44",         // 6赤
+    "#5B5",         // 7緑
+];
+
+const TETRO_TYPES = [
+    [], // 0.空っぽ
+
+    [               // 1.I
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ],
+    [               // 2.L
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 1, 0],
+      [0, 0, 0, 0],
+    ],
+    [               // 3.J
+      [0, 0, 1, 0],
+      [0, 0, 1, 0],
+      [0, 1, 1, 0],
+      [0, 0, 0, 0],
+    ],
+    [               // 4.T
+      [0, 1, 0, 0],
+      [0, 1, 1, 0],
+      [0, 1, 0, 0],
+      [0, 0, 0, 0],
+    ],
+    [               // 5.O
+      [0, 0, 0, 0],
+      [0, 1, 1, 0],
+      [0, 1, 1, 0],
+      [0, 0, 0, 0],
+    ],
+    [               // 6.Z
+      [0, 0, 0, 0],
+      [1, 1, 0, 0],
+      [0, 1, 1, 0],
+      [0, 0, 0, 0],
+    ],
+    [               // 7.S
+      [0, 0, 0, 0],
+      [0, 1, 1, 0],
+      [1, 1, 0, 0],
+      [0, 0, 0, 0],
+    ], 
+
+];
+
+const START_X = FIELD_COL / 2 - TETRO_SIZE / 2;
+const START_Y = 0;
+
+let tetro;
+let tetro_x = FIELD_COL / 2 - TETRO_SIZE / 2;
+let tetro_y = 0;
+let tetro_t;
+let field = [];
+let over = false;
+let lines = 0;
+let score = 0;
+let dropInterval;
+
+function init() {
+    field = Array.from({ length: FIELD_ROW }, () => Array(FIELD_COL).fill(0));
+    tetro_t = Math.floor(Math.random() * (TETRO_TYPES.length - 1)) + 1;
+    tetro = TETRO_TYPES[tetro_t];
+    tetro_x = START_X;
+    tetro_y = START_Y;
+    score = 0;
+    over = false;
+    updateScore();
+    drawAll();
+}
+
+function drawBlock(x, y, c) {
+    let px = x * BLOCK_SIZE;
+    let py = y * BLOCK_SIZE;
+
+    con.fillStyle = TETRO_COLORS[c];
+    con.fillRect(px, py, BLOCK_SIZE, BLOCK_SIZE);
+    
+    // ここで枠線の太さを指定する
+    con.strokeStyle = "black";
+    con.lineWidth = 1; // 枠線の太さを指定
+    con.strokeRect(px, py, BLOCK_SIZE, BLOCK_SIZE);
+}
+
+function drawAll() {
+    con.clearRect(0, 0, SCREEN_W, SCREEN_H);
+
+    for (let y = 0; y < FIELD_ROW; y++) {
+        for (let x = 0; x < FIELD_COL; x++) {
+            if (field[y][x]) {
+                drawBlock(x, y, field[y][x]);
+            }
+        }
+    }
+
+    for (let y = 0; y < TETRO_SIZE; y++) {
+        for (let x = 0; x < TETRO_SIZE; x++) {
+            if (tetro[y][x]) {
+                drawBlock(tetro_x + x, tetro_y + y, tetro_t);
+            }
+        }
+    }
+
+    if (over) {
+        let s = "GAME OVER";
+        con.font = "40px 'MS ゴシック'";
+        let w = con.measureText(s).width;
+        let x = SCREEN_W / 2 - w / 2;
+        let y = SCREEN_H / 2 - 20;
+        con.lineWidth = 4;
+        con.strokeText(s, x, y);
+        con.fillStyle = "white";
+        con.fillText(s, x, y);
+    }
+}
+
+function updateScore() {
+    document.getElementById('score').textContent = `Score: ${score}`;
+}
+
+function checkMove(mx, my, ntetro) {
+    if (ntetro === undefined) ntetro = tetro;
+
+    for (let y = 0; y < TETRO_SIZE; y++) {
+        for (let x = 0; x < TETRO_SIZE; x++) {
+            if (ntetro[y][x]) {
+                let px = tetro_x + x + mx;
+                let py = tetro_y + y + my;
+                if (px < 0 || px >= FIELD_COL || py >= FIELD_ROW || field[py][px]) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+function rotateTetro() {
+    let ntetro = [];
+    for (let y = 0; y < TETRO_SIZE; y++) {
+        ntetro[y] = [];
+        for (let x = 0; x < TETRO_SIZE; x++) {
+            ntetro[y][x] = tetro[TETRO_SIZE - x - 1][y];
+        }
+    }
+    return ntetro;
+}
+
+function fixTetro() {
+    for (let y = 0; y < TETRO_SIZE; y++) {
+        for (let x = 0; x < TETRO_SIZE; x++) {
+            if (tetro[y][x]) {
+                field[tetro_y + y][tetro_x + x] = tetro_t;
+            }
+        }
+    }
+}
+
+function checkLine() {
+    let linec = 0;
+    for (let y = 0; y < FIELD_ROW; y++) {
+        let flag = true;
+
+        for (let x = 0; x < FIELD_COL; x++) {
+            if (!field[y][x]) {
+                flag = false;
+                break;
+            }
+        }
+
+        if (flag) {
+            linec++;
+            for (let ny = y; ny > 0; ny--) {
+                for (let nx = 0; nx < FIELD_COL; nx++) {
+                    field[ny][nx] = field[ny - 1][nx];
+                }
+            }
+        }
+    }
+
+    if (linec > 0) {
+        score += 100 * (2 ** (linec - 1));
+        updateScore();
+    }
+}
+
+function dropTetro() {
+    if (over) return;
+
+    if (checkMove(0, 1)) tetro_y++;
+    else {
+        fixTetro();
+        checkLine();
+
+        if (!over) {
+            tetro_t = Math.floor(Math.random() * (TETRO_TYPES.length - 1)) + 1;
+            tetro = TETRO_TYPES[tetro_t];
+            tetro_x = START_X;
+            tetro_y = START_Y;
+
+            if (!checkMove(0, 0)) {
+                over = true;
+                clearInterval(dropInterval);
+            }
+        }
+    }
+
+    drawAll();
+}
+
+let gameStarted = false; // ゲーム開始フラグ
+
+function init() {
+    field = Array.from({ length: FIELD_ROW }, () => Array(FIELD_COL).fill(0));
+    tetro_t = Math.floor(Math.random() * (TETRO_TYPES.length - 1)) + 1;
+    tetro = TETRO_TYPES[tetro_t];
+    tetro_x = START_X;
+    tetro_y = START_Y;
+    score = 0;
+    over = false;
+    updateScore();
+    drawAll();
+}
+
+//ゲーム開始
+function startGame() {
+    if (!dropInterval) {
+        dropInterval = setInterval(dropTetro, GAME_SPEED);
+    }
+}
+
+//ゲーム停止
+function stopGame() {
+    clearInterval(dropInterval);
+    dropInterval = null;
+}
+
+// リセット機能
+function resetGame() {
+    stopGame(); // Stop any existing game
+    init();     // Initialize the game
+    startGame(); // Start the game
+}
+
+// スタートボタンのイベントリスナーを追加
+document.getElementById("start").addEventListener("click", startGame);
+document.getElementById("reset").addEventListener("click", function() {
+    resetGame();  // リセットボタンがクリックされたときにリセット関数を呼び出す
+});
+
+// ゲームオーバー時にゲームを停止する
+function gameOver() {
+    over = true;
+    clearInterval(dropInterval);
+    gameStarted = false; // ゲーム開始フラグをリセット
+}
+
+function resetGame() {
+    clearInterval(dropInterval);
+    init();
+    dropInterval = setInterval(dropTetro, GAME_SPEED);
+}
+
+document.getElementById("reset").addEventListener("click", function() {
+    resetGame();
+});
+
+function moveLeft() {
+    if (over) return;
+    if (checkMove(-1, 0)) tetro_x--;
+    drawAll();
+}
+
+function moveRight() {
+    if (over) return;
+    if (checkMove(1, 0)) tetro_x++;
+    drawAll();
+}
+
+function rotate() {
+    if (over) return;
+    let ntetro = rotateTetro();
+    if (checkMove(0, 0, ntetro)) tetro = ntetro;
+    drawAll();
+}
+
+function accelerate() {
+    if (over) return;
+    while (checkMove(0, 1)) tetro_y++;
+    drawAll();
+}
+
+function updateScore() {
+    document.getElementById('score').textContent = `Score: ${score}`;
+}
+
+document.getElementById("moveLeft").addEventListener("click", moveLeft);
+document.getElementById("moveRight").addEventListener("click", moveRight);
+document.getElementById("rotate").addEventListener("click", rotate);
+document.getElementById("accelerate").addEventListener("click", accelerate);
+document.getElementById("reset").addEventListener("click", function() {
+    resetGame();  // リセットボタンがクリックされたときにリセット関数を呼び出す
+});
+document.getElementById("start").addEventListener("click", startGame);
+document.addEventListener('keydown', function(e) {
+    if (e.key === ' ') {
+        startGame(); // スペースキーが押されたときにゲームを開始
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (over) return;
+
+    switch (e.key) {
+        case 'a':
+        case 'A':
+            if (checkMove(-1, 0)) tetro_x--;
+            break;
+        case 'd':
+        case 'D':
+            if (checkMove(1, 0)) tetro_x++;
+            break;
+        case 's':
+        case 'S':
+            while (checkMove(0, 1)) tetro_y++;
+            break;
+        case 'w':
+        case 'W':
+            let ntetro = rotateTetro();
+            if (checkMove(0, 0, ntetro)) tetro = ntetro;
+            break;
+        case 'r':
+        case 'R':  // ここでリセット機能を追加
+            resetGame();  // リセット関数を呼び出す
+            break;
+    }
+
+    drawAll();
+});
+
+init();
+
+
+</script>
+</body>
+</html>
