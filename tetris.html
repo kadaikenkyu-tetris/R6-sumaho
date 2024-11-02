@@ -15,10 +15,10 @@
   }
 
   .controls button {
-    font-size: 20px;
-    width: 50px;
-    height: 50px;
-    margin: 5px;
+    font-size: 60px;
+    width: 100px;
+    height: 100px;
+    margin: 10px;
   }
 
   #score-container {
@@ -29,22 +29,22 @@
   }
 
   #start {
-    font-size: 24px;
-    width: 50px;
-    height: 50px;
+    font-size: 60px;
+    width: 100px;
+    height: 100px;
     line-height: 50px; /* ボタン内のアイコンを垂直に中央揃え */
     text-align: center;
     background-color: #f0f0f0;
     border: 2px solid #ccc;
     border-radius: 5px;
     display: block; /* 常に表示する */
-    margin-right: 10px; /* スタートボタンとリセットボタンの間にスペースを追加 */
+    margin-right: 20px; /* スタートボタンとリセットボタンの間にスペースを追加 */
 }
 
   #reset {
-    font-size: 24px;
-    width: 50px;
-    height: 50px;
+    font-size: 60px;
+    width: 100px;
+    height: 100px;
     line-height: 50px; /* ボタン内のアイコンを垂直に中央揃え */
     text-align: center;
     background-color: #f0f0f0;
@@ -54,7 +54,7 @@
     margin-right: 10px; /* リセットボタンとスコアの間にスペースを追加 */
   }
   #score {
-    font-size: 24px;
+    font-size: 60px;
   }
 
 </style>
@@ -85,8 +85,8 @@ const GAME_SPEED = 300;
 const FIELD_COL = 10;
 const FIELD_ROW = 20;
 
-//ブロック一つのサイズ（ピクセル）
-const BLOCK_SIZE = 25;
+//ブロック一つのサイズ（ピクセル） 全体の大きさ
+const BLOCK_SIZE = 50;
 
 //スクリーンのサイズ
 const SCREEN_W = BLOCK_SIZE * FIELD_COL;
