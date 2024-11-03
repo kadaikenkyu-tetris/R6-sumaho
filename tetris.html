@@ -14,10 +14,10 @@
   }
 
   .controls button {
-    font-size: 60px;
-    width: 100px;
-    height: 100px;
-    margin: 10px;
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    margin: 5px;
   }
 
   #score-container {
@@ -28,22 +28,22 @@
   }
 
   #start {
-    font-size: 60px;
-    width: 100px;
-    height: 100px;
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
     line-height: 50px;
     text-align: center;
     background-color: #f0f0f0;
     border: 2px solid #ccc;
     border-radius: 5px;
     display: block;
-    margin-right: 20px;
+    margin-right: 10px;
   }
 
   #reset {
-    font-size: 60px;
-    width: 100px;
-    height: 100px;
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
     line-height: 50px;
     text-align: center;
     background-color: #f0f0f0;
@@ -54,7 +54,7 @@
   }
   
   #score {
-    font-size: 60px;
+    font-size: 24px;
   }
 </style>
 </head>
@@ -271,7 +271,7 @@ function drawAll() {
 
     if (over) {
         let s = "GAME OVER";
-        con.font = "70px 'MS ゴシック'";
+        con.font = "40px 'MS ゴシック'";
         let w = con.measureText(s).width;
         con.fillStyle = "black";
         con.fillText(s, SCREEN_W / 2 - w / 2, SCREEN_H / 2);
