@@ -34,42 +34,31 @@
         }
         .container {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column; /* Stack items vertically on small screens */
             gap: 20px;
             padding: 20px;
         }
-        .game-container, .code-container {
-            flex: 1;
-            min-width: 300px;
-            max-width: 920px; /*コード一覧　枠　横幅*/
+        .game-container, .code-container, .new-container {
+            width: 100%; /* Set width to 100% for responsiveness */
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
         }
-        .new-container {
-            flex: 1;
-            min-width: 300px;
-            max-width: 700px; /*コード説明　枠　横幅*/
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
         iframe {
-            width: 900px;
-            height: 700px; /* Increased height */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Rounded corners */
-            overflow: hidden; /* Hide scrollbars */
+            width: 100%; /* Responsive iframe */
+            height: 400px; /* Adjusted height for smaller screens */
+            border: none;
+            border-radius: 5px;
+            overflow: hidden;
         }
         pre {
             background-color: #ffffff;
             border: 1px solid #ddd;
             padding: 15px;
             border-radius: 10px;
-            font-size: 1.1em;
-            line-height: 1.6;
-            text-align: left; /* Align text to the left */
+            font-size: 1em; /* Adjust font size for mobile */
+            line-height: 1.4;
+            text-align: left;
         }
         code {
             font-family: 'Courier New', Courier, monospace;
@@ -79,21 +68,33 @@
             background: #f4f4f4;
             text-align: center;
             padding: 10px;
-            position: fixed;
+            position: relative; /* Changed from fixed to relative for better mobile support */
             width: 100%;
-            bottom: 0;
         }
         .image-wrapper {
-            max-height: 725px; /* Set a max height for the wrapper */
-            max-width: 920px; /* Enable vertical scrolling */
-            overflow-y: auto; /* Enable vertical scrolling */
-            border: 1px solid #ddd; /*外枠の表示 */
-            border-radius: 5px; /* Optional: rounded corners */
-            margin-bottom: 10px; /* Space below the image */
+            max-width: 100%; /* Responsive image wrapper */
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
         }
         .snapshot-image {
-            width: 900px; /* Ensure the image fits the width */
+            width: 100%; /* Responsive image */
             height: auto; /* Maintain aspect ratio */
+        }
+
+        /* Media query for larger screens */
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row; /* Stack items in rows on larger screens */
+            }
+            .game-container, .code-container, .new-container {
+                flex: 1; /* Allow items to grow equally */
+                min-width: 300px;
+            }
+            iframe {
+                height: 700px; /* Increased height for larger screens */
+            }
         }
     </style>
 </head>
@@ -159,6 +160,10 @@
             </div>
         </section>
     </main>
+    
+    <footer>
+        <p>&copy; 2024 課題研究</p>
+    </footer>
     
     <script src="js/script.js"></script>
 </body>
