@@ -1,4 +1,12 @@
-/* 基本スタイルはそのまま適用 */
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>課題研究　Webページ</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Basic styling for layout */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -107,3 +115,72 @@ footer {
         padding: 15px;
     }
 }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>課題研究　テトリス作ってみた</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">ホーム</a></li>
+                <li><a href="#about">説明</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="home">
+            <h2>テトリスを楽しもう</h2>
+            <div class="container">
+                <div class="game-container">
+                    <h3>テトリスゲーム</h3>
+                    <iframe src="tetris.html" title="テトリスゲーム" scrolling="no"></iframe>
+                </div>
+                <div class="code-container">
+                    <h3>操作方法</h3>
+                    <pre><code>
+▶️      : スタートボタン
+🔄  R  : リセットボタン
+↻   W  : 回転
+←   A  : 左移動
+→   D  : 右移動
+↓   S  : 落下
+                    </code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="コード一覧">
+            <div class="container">
+                <div class="game-container">
+                    <h3>コード一覧</h3>
+                    <div class="image-wrapper">
+                        <img src="code-snapshot.png" alt="コードのスナップショット" class="snapshot-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="コード説明">
+            <div class="container">
+                <div class="game-container">
+                    <h3>テトロミノのコード説明</h3>
+                    <div class="image-wrapper">
+                        <img src="テトロミノ.png" alt="テトロミノのコードのスナップショット" class="snapshot-image">
+                    </div>
+                </div>
+                <div class="new-container">
+                    <h3>テトロミノ</h3>
+                    <p>ここに新しい内容を追加できます。</p>
+                    <pre><code>
+                        追加情報や説明をここに記述できます。
+                    </code></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <script src="js/script.js"></script>
+</body>
+</html>
