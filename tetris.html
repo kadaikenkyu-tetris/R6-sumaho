@@ -2,6 +2,10 @@
 <html>
 <head>
 <style>
+  body {
+    font-family: Yu Gothic UI, Arial, sans-serif; 
+  }
+
   #can {
     border: 4px solid #555;
     display: block;
@@ -59,6 +63,8 @@
 </style>
 </head>
 <body>
+
+
 <div id="score-container">
   <button id="start">▶️</button>
   <button id="reset">🔄</button>
@@ -271,7 +277,7 @@ function drawAll() {
 
     if (over) {
         let s = "GAME OVER";
-        con.font = "30px 'MS ゴシック'";
+        con.font = "40px 'MS ゴシック'";
         let w = con.measureText(s).width;
         con.fillStyle = "black";
         con.fillText(s, SCREEN_W / 2 - w / 2, SCREEN_H / 2);
@@ -390,9 +396,9 @@ function stopGame() {
 
 // リセット機能
 function resetGame() {
-    stopGame(); // Stop any existing game
-    init();     // Initialize the game
-    startGame(); // Start the game
+    stopGame(); // ゲームの停止
+    init();     // ゲームの初期化
+    startGame(); // ゲームをスタート
 }
 
 // スタートボタンのイベントリスナーを追加
