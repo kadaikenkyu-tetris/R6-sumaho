@@ -370,8 +370,6 @@ function dropTetro() {
             if (!checkMove(0, 0)) {
                 over = true;
                 clearInterval(dropInterval);
-                setControlsEnabled(false); // ゲームオーバー時にボタンを無効にする
-                setKeyboardEnabled(false); // ゲームオーバー時にキーボードを無効にする
             }
         }
     }
@@ -390,8 +388,6 @@ function startGame() {
 function stopGame() {
     clearInterval(dropInterval);
     dropInterval = null;
-    setControlsEnabled(false); // ゲーム停止時にボタンを無効にする
-    setKeyboardEnabled(false); // ゲーム停止時にキーボードを無効にする
 }
 
 // リセット機能
