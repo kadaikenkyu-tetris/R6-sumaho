@@ -2,10 +2,7 @@
 <html>
 <head>
 <style>
-  body {
-    font-family:  Arial, sans-serif; 
-  }
-
+  
   #can {
     border: 4px solid #555;
     display: block;
@@ -277,10 +274,14 @@ function drawAll() {
 
     if (over) {
         let s = "GAME OVER";
-        con.font = "30px 'MS ゴシック'";
+        con.font = "32px 'MS ゴシック'";
         let w = con.measureText(s).width;
-        con.fillStyle = "black";
-        con.fillText(s, SCREEN_W / 2 - w / 2, SCREEN_H / 2);
+        let x = SCREEN_W/2 - w/2;
+        let y = SCREEN_H/2 - 20;
+        con. lineWidth = 3;
+        con.strokeText(s,x,y);
+        con.fillStyle = "white";
+        con.fillText(s,x,y);
     }
 }
 
